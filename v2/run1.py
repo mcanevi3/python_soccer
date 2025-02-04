@@ -6,6 +6,11 @@ import json
 conn = http.client.HTTPSConnection("api-football-v1.p.rapidapi.com")
 headers = {'x-rapidapi-key': "ae117033ebmsh5ffd3dcd618e951p1ab50cjsn5abc16d907ab",'x-rapidapi-host': "api-football-v1.p.rapidapi.com"}
 
+def save_to_file(filename:str,strdata:str):
+    with open("raw_data/"+filename, "w") as f:
+        f.write(strdata)
+        f.close()
+
 def get_country_code(name:str):
     conn.request("GET", "/v3/countries", headers=headers)
     res = conn.getresponse()
@@ -41,7 +46,8 @@ def get_leagues_by_country(name:str):
 
     data=json.loads(res.read())
     response=data['response']
-    for i in range(0,len(response)):
-        print(response[i])
+    save_to_file("leagues_by_country.json",json.dumps(response[0], indent=4))
 
 get_leagues_by_country("asd")
+
+
