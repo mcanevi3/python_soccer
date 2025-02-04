@@ -1,11 +1,15 @@
 import http.client
 import json
 import os
+import league
 
 def save_to_file(path_name:str,strdata:str):
     with open(path_name, "w") as f:
         f.write(strdata)
         f.close()
+
+def dump_to_file(strdata:str):
+    save_to_file("dump.json",strdata)
 
 def get_from_file(path_name:str):
     if os.path.exists(path_name):
@@ -62,8 +66,14 @@ def run_cmd(cmd:str,arg_val:list):
 
         api_command=command['api_command']+api_args
         data=get_from_api(api_command)
-        save_to_file(path_name,json.dumps(data))
+        save_to_file(path_name,json.dumps(data,indent=4))
     return data
 
 data=run_cmd("leagues_",['turkey'])
-data=run_cmd("standings_",['203','2020'])
+#[0]["seasons"][0]["year"]
+# routes1={0,"league","id"}
+# routes2={0,"league","name"}
+dump_to_file(json.dumps(data["response"],indent=4))
+# data=run_cmd("standings_",['203','2020'])
+
+temp=league.LeagueList(data["response"])
